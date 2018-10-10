@@ -1,1 +1,9 @@
-
+知识点总结
+1.由于传入的是指针，尽管没有明确指出为顶层const，但仍需注意执行函数后传入的指针参数是否需要保持不变。如不变，可新建一个指针，进行赋值；
+2.类中.运算符与->运算符
+      A *p = &a;
+    （*p）.set（）等同于p->set（）
+3.ListNode* l3 = new ListNode(0);  //l3指针，用(*l3).next, l3->next
+  等同于
+  ListNode node3(0);
+  ListNode* l3 = &node3;  //node3是对象
