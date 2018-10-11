@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        string max;
+        string cur = max;
+        for(string::size_type i=0; i<s.size();++i){
+            auto pos = cur.find(s[i]);
+            if(pos==string::npos){
+                cur = cur + s[i];
+                if(max.size()<cur.size())   max = cur;
+            }
+            else{
+                cur = cur.substr(pos+1) + s[i];
+            }
+        }
+        
+        return max.size();
+    }
+};
