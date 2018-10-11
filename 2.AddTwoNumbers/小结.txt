@@ -7,3 +7,11 @@
   等同于
   ListNode node3(0);
   ListNode* l3 = &node3;  //node3是对象
+4.动态内存
+  用nuw新建，最后要销毁delete,如果后面仍需用到新建的内容，则不能立即delete。
+  可以用 智能指针
+      shared_ptr<ListNode> p = make_shared<ListNode> (0); //新建智能指针，用0初始化
+  当一下情况时，使用智能指针：
+    （1）程序不知道自己要使用多少对象（容器类）；
+    （2）程序不知道所需对象的准确类型；
+    （3）程序要多个对象间共享数据；
