@@ -11,7 +11,7 @@ public:
         int min = 0;
         for (int i=0;i<nums.size();++i){
             sum += nums[i];
-            if (sum-min >= ans) ans = sum-min;
+            if (sum-min > ans) ans = sum-min;      //这里不能单纯的使用if(sum>max) max=sum,因为可能出现a>b的情况，所以要限定(sum-min > ans)，保证a<b.
             if (sum < min) min = sum;
         }
         return ans;
