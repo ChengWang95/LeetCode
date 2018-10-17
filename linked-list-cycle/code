@@ -1,0 +1,23 @@
+//这里主要是要考虑周全有哪些 循环list：
+//不但是 1 2 3 4 1 2 3 4 ...
+//还有 1 2 3 2 3 2 3...
+//*** 起始位置不一定在循环中
+
+//所以，思路：
+//1.使用两个指针 head、p；
+//2.head一次移动一步，p一次移动两步。
+//3.如果链表是循环的，那么在某时刻，head和p会相遇。
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (!head) return 0;
+        auto p=head;
+        while(p->next && p->next->next){    //一旦，链表断开，无循环
+            head = head->next;
+            p = p->next->next;
+            if (head == p) return true;
+        }
+        return false;
+    }
+};
