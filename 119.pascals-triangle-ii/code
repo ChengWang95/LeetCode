@@ -1,0 +1,25 @@
+//思路分析
+//写出答案找规律，因为是一行，所以全从最左边开始，当rowIndex = 4 时：
+//    1 0 0 0 0 0
+//    1 1 0 0 0 0
+//    1 2 1 0 0 0
+//    1 3 3 1 0 0
+//    1 4 6 4 1 0
+//可以观察到 下一行第i的元素为上一行第i和第i-1个元素之和，所以可以递推为 a[i] = a[i] + a[i-1]，改变了a[i]，没有改变a[i-1].
+//如果从左往右递推，a[i]' = a[i] + a[i-1], a[i+1]' = a[i+1] + a[i]',这里，求a[i+1]时a[i]变了为a[i]'，所以不能从左往右递推。
+//因为a[i]' = a[i] + a[i-1]，a[i-1] = a[i-1] + a[i-2]，求a[i-1] 时没有用到改变的元素，所以可行。
+
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> ans(rowIndex+1, 0);
+        ans[0] = 1;
+        for (int i=1; i<=rowIndex; ++i){
+            for(int j = i; j>=1; --j){
+                ans[j] += ans[j-1];
+            }
+        }
+        return ans;
+    }
+};
