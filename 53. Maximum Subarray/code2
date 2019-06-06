@@ -1,30 +1,54 @@
 //分而治之，时间复杂度nlog（n）
 
+Using Divide and Conquer approach, we can find the maximum subarray sum in O(nLogn) time. Following is the Divide and Conquer algorithm.
+
+
+
+1) Divide the given array in two halves
+2) Return the maximum of following three
+….a) Maximum subarray sum in left half (Make a recursive call)
+….b) Maximum subarray sum in right half (Make a recursive call)
+….c) Maximum subarray sum such that the subarray crosses the midpoint
+
+The lines 2.a and 2.b are simple recursive calls. How to find maximum subarray sum such that the subarray crosses the midpoint? We can easily find the crossing sum in linear time. The idea is simple, find the maximum sum starting from mid point and ending at some point on left of mid, then find the maximum sum starting from mid + 1 and ending with sum point on right of mid + 1. Finally, combine the two and return.
+
+
 class Solution {
 public:
-    int maxSub(vector<int>& nums, int left, int right);
-    
+    int maxSub(vector<int>& nums, int l, int r){ //左闭右开
+        if(l==r-1) return nums[l];
+        int m = (l+r)/2;
+        int ml,mr,mm;
+        ml = maxSub(nums, l, m);
+        mr = maxSub(nums, m, r);
+        mm = maxSubCrossing(nums,l,m,r);
+        int max = ml>mr? ml:mr;
+        return max>mm? max:mm;
+    }
+    int maxSubCrossing(vector<int>& nums,int l,int m,int r){
+        int sum = 0;
+        int l_sum = INT_MIN;
+        for (int i=m-1;i>=l;--i){
+            sum += nums[i];
+            l_sum = l_sum>sum? l_sum:sum;
+        }
+        sum = 0;
+        int r_sum = INT_MIN;
+        for (int i=m;i<r;++i){
+            sum += nums[i];
+            r_sum = r_sum>sum? r_sum:sum;
+        }
+        return l_sum + r_sum;
+    }
     int maxSubArray(vector<int>& nums) {
-        if (nums.size() == 0) return 0;
+        if(nums.size() == 0) return 0;
         return maxSub(nums, 0, nums.size());
     }
     
-    int maxSub(vector<int>& nums, int left, int right) {
-        if (left == right+1)    return nums[left];
-        int mid = (left + right) / 2;
-        int max_l = maxSub(nums, left, mid);
-        int max_r = maxSub(nums, mid, right);
-        int max_m = nums[mid];
-        int sum_m = max_m;
-        for (int i = mid + 1; i<right; ++i) {
-            if ((sum_m = sum_m + nums[i])>max_m) max_m = sum_m;
-        }
-        for (int i = mid - 1; i >= left; --i) {
-            if ((sum_m = sum_m + nums[i])>max_m) max_m = sum_m;
-        }
-                int max = max_l>max_r ? max_l : max_r;
-        max = max>max_m ? max : max_m;
-        return max;
-    }
-    
 };
+
+
+*1.这里分而治之关键是如何求交叉部分的最大和:如何表达出从没有开始，一旦有一个数，就更新和值，用INI_MIN。
+    sum = 0;
+    int r_sum = INT_MIN;
+    
