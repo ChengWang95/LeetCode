@@ -1,6 +1,6 @@
 //动态规划
 //    用dp[n]表示以第n个数结尾的最大连续子序列的和，于是存在以下递推公式：
-//      dp[n] = max(0, dp[n-1]) + num[n]
+//      dp[n] = dp[n-1]>0?(dp[n-i]+nums[n]):nums[n]
 //    则整个问题的答案是max(dp[m]) | m∈[1, N]
 
 class Solution {
