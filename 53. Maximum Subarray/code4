@@ -2,18 +2,19 @@
 //  如存在最大子列和为第a个数到第b个数的和，则sum[a]必然是sum[1],sum[2]...sum[a-1]中的最小值！
 //  所有求出最大的sum和最小的sum，相减即为最大子列和。
 
+
+
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        if (nums.size() == 0) return 0;
         int sum = 0;
-        int ans = nums[0];
+        int max = nums[0];
         int min = 0;
-        for (int i=0;i<nums.size();++i){
+        for (int i=0; i<nums.size(); ++i){
             sum += nums[i];
-            if (sum-min > ans) ans = sum-min;      //这里不能单纯的使用if(sum>max) max=sum,因为可能出现a>b的情况，所以要限定(sum-min > ans)，保证a<b.
-            if (sum < min) min = sum;
+            if(sum-min>max) max = sum-min;
+            if(sum<min) min = sum;
         }
-        return ans;
-    }  
+        return max;
+    }
 };
