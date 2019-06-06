@@ -14,20 +14,54 @@ public:
     
 };
 
+*T:o(n2);S:o(1).
+*1.直接返回vector<int> {i,j}，而不需要先定义该变量。
 
+————————————————————————————————————————————————————
+两数之和，有了一个数后，花时间最多的是去找另一个数，需要o(n)复杂度，可以使用hashtable将搜索复杂度降到o(1)。
+
+Approach2：Hashtable, unordered_map
 
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
-        unordered_map<int,int> m;
-        for (int i=0;i<nums.size();++i){
-            m[nums[i]] = i;
+        unordered_map<int, int> Map;
+        for(int i=0; i<nums.size();i++){
+            Map[nums[i]] = i;
         }
-        for (int i=0; i<nums.size()-1; ++i){
-            int t = target - nums[i];
-            if (m.count(t) && m[t]!=i){
-                return vector<int> {i,m[t]};
-            }
+        for(int i=0; i<nums.size();i++){
+            int rest = target - nums[i];
+            if(Map.count(rest)>0 && Map[rest]!=i)
+                return vector<int> {i,Map[rest]};
         }
+        return vector<int> ();
+    }
+};
+
+*1.用hashtable搜索，o(1)复杂度；
+*2.map的操作：
+    插入用从c[k]=i; 
+    看是否存在用c.count(k);
+    获得值用c[k];
+*3.简洁代码：
+    if(Map.count(rest)>0 && Map[rest]!=i)   ————> if(Map.count(rest) && Map[rest]!=i)
+    左边成立才会检查右边是否成立。
+    
+
+————————————————————————————————————————————————————
+这里可以发现，有两次重复的循环，可见其合在一起。
+因为：如果存在两数之和，那插入第二个数进map时一定能搜到第一个数。上一种方法以第一个数为基准看rest是否存在，现在以第二个数为基准看第一个数是否存在。
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> Map;
+        for(int i=0; i<nums.size();i++){
+            int rest = target - nums[i];    
+            if(Map.count(target - nums[i]))
+                return vector<int> {i,Map[rest]};
+            Map[nums[i]] = i;
+        }
+        return vector<int> ();
     }
 };
