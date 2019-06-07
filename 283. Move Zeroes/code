@@ -1,0 +1,15 @@
+思路：
+  将所有非零元素往前压，用zero_pos记录零元素的位置，遇见非零元素，替换，遇见零元素继续往下走。
+
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int zero_pos = 0;
+        for (int i=0; i<nums.size();++i){
+            if(nums[i])
+                nums[zero_pos++] = nums[i];    
+        }
+        for(;zero_pos<nums.size();zero_pos++)
+            nums[zero_pos] = 0;
+    }
+};
