@@ -1,0 +1,19 @@
+求解思路：
+  所考察的目标刚好和向量的下标对应，所以可以用下标表示对应的数是否出现。
+  
+
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        vector<int> res;
+        for(int i=0; i<nums.size();++i){
+            int index = abs(nums[i]) - 1;
+            nums[index] = nums[index]>0?-nums[index]:nums[index];
+        }
+        for(int i=0; i<nums.size();++i){
+            if (nums[i] >0 )
+                res.push_back(i+1);
+        }
+        return res;
+    }
+};
