@@ -1,0 +1,58 @@
+Approach1:
+要求最小子序列从而能正确排序，那就和正确排序的对比，会发现，两个序列相同位置的元素，
+  值相同说明不需要调整位置，不相同，说明需要调整位置，找到需要调整位置的最小和最大小标，
+  
+  
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        vector<int> snums(nums);
+        sort(snums.begin(), snums.end());
+        int l=0, r=0;
+        for(int i=0;i<nums.size();++i){
+            if(nums[i]!=snums[i]){
+                l = i;
+                break;
+            }
+        }
+        for(int i=nums.size()-1;i>=0;--i){
+            if(nums[i]!=snums[i]){
+                r = i;
+                break;
+            }
+        }
+        return r-l<=0? 0:r-l+1;
+    }
+};
+
+
+
+Approach2:
+  对左边界：为最小的值应该插在最前面升序序列的那个位置。1.找出有降序时的最小值，2.找最小值的位置；
+  对右边界：为最大的值应该插在最后面降序序列的那个位置。同上。
+  
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        int l_min = INT_MAX, r_max = INT_MIN;
+
+        for(int i=1;i<nums.size();++i){
+            if(nums[i-1]>nums[i])
+                l_min = min(l_min, nums[i]);
+        }
+        for(int i=nums.size()-2;i>=0;--i){
+            if(nums[i]>nums[i+1])
+                r_max = max(r_max, nums[i]);
+        }
+        int l,r;
+        for(l=0;l<nums.size();++l){
+            if(l_min<nums[l])
+                break;
+        }
+        for(r=nums.size()-1;r>=0;--r){
+            if(r_max > nums[r])
+                break;
+        }
+        return l>r? 0:r-l+1;
+    }
+};
