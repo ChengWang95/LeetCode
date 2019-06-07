@@ -1,0 +1,21 @@
+求解思路：
+  最大获利必然是某个点的值减去之前最小值。
+  
+  动态规划：
+  dp[i]表示从0到i天的最小值；则第i天的最大收入只能为：prices[i]-dp[i].
+  所以考虑所有天数，最大收入为 min{prices[i]-dp[i]},i=0,1,2,...,n-1
+
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (!prices.size()) return 0;
+        int maxPro = 0;
+        int dp = INT_MAX;   //用无穷大初始化第0天之前的最大收入。
+        for (int i=0; i<prices.size();++i){
+            dp = min(prices[i],dp);
+            maxPro = max(maxPro,prices[i]-dp); 
+        }
+        return maxPro;
+    }
+};
