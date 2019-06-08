@@ -1,0 +1,61 @@
+为了不重复输出，需要先排序；
+
+Approach1:
+  Brute Force:
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> solu;
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<nums.size()-2;i++){
+            for(int j=i+1;j<nums.size()-1;j++){
+                for(int k=j+1;k<nums.size();k++){
+                    if(nums[i]+nums[j]+nums[k] == 0 && find(solu.cbegin(),solu.cend(),vector<int>{nums[i],nums[j],nums[k]}) == solu.cend())
+                        solu.push_back(vector<int>{nums[i],nums[j],nums[k]});
+                }
+            }
+        }
+        
+        
+        
+Approach2:
+  less Brute Force:
+  考虑2sum，将3sum转化为2sum，在第二次循环中，读取数据的同时，将两数之和保存到hashtable中：
+  	unordered_map<int, vector<vector<int>>> Map;
+	 这种办法太过复杂；
+	 
+Approach3：
+	 对排序好的数组：
+	 固定第一个数，将第二个数放在之后开头位置，第三个数放在之后最后位置，求和，要减小和，只能左移第三个数，要增大和，只能右移第二个数。
+	 这样，就能通过和与0的大小关系移动后两个数的位置，找出解。
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> solu;
+        if(nums.size()<3) return solu;
+        sort(nums.begin(),nums.end());
+        for(int i=0; i<nums.size()-2;++i){
+            if(i>0 && nums[i]==nums[i-1]) continue;
+            int lo = i+1,hi = nums.size()-1;
+            while(lo<hi){
+                if(nums[i]+nums[lo]+nums[hi] == 0){
+                    solu.push_back(vector<int>{nums[i],nums[lo],nums[hi]});
+                    while(lo<hi && nums[hi]==nums[hi-1]) hi--;
+                    hi--;
+                    while(lo<hi && nums[lo+1]==nums[lo]) lo++;
+                    lo++;
+                }
+                else if(nums[i]+nums[lo] + nums[hi] > 0) hi--;
+                else lo++;
+            }
+        }
+        return solu;
+    }           
+};
+
+
+
+
+			
