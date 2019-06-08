@@ -37,7 +37,7 @@ public:
         if(nums.size()<3) return solu;
         sort(nums.begin(),nums.end());
         for(int i=0; i<nums.size()-2;++i){
-            if(i>0 && nums[i]==nums[i-1]) continue;
+            if(i>0 && nums[i]==nums[i-1]) continue;	//如果nums[i]=nums[i+1],以i+1作为第一个数有两种情况：无解，解与以i作为第一个数相同。
             int lo = i+1,hi = nums.size()-1;
             while(lo<hi){
                 if(nums[i]+nums[lo]+nums[hi] == 0){
@@ -45,7 +45,8 @@ public:
                     while(lo<hi && nums[hi]==nums[hi-1]) hi--;
                     hi--;
                     while(lo<hi && nums[lo+1]==nums[lo]) lo++;
-                    lo++;
+                    lo++;			 	
+		    //找到lo、hi为一个解，接下来有两种情况：lo、hi之间还存在解，那必然在lo+1、hi-1之间；若无解，那lo会增大到hi或hi减小到lo。
                 }
                 else if(nums[i]+nums[lo] + nums[hi] > 0) hi--;
                 else lo++;
