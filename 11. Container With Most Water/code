@@ -1,0 +1,80 @@
+Approach1:
+  对水深h，l、r分别为左右边界，面积为h*(r-l).
+  知道水深h后，l、r分别为从左开始、从右开始的第一个值大于h的点。
+  水深h的取值范围在柱子高度中。
+  
+  因此，可迭代每一个柱子高位为水深，求出最大面积。
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int cont = 0;
+        for(int i=0; i<height.size();++i){
+            int h = height[i];
+            int l = 0, r = height.size()-1;
+            for(;l<height.size();++l){
+                if(height[l]>=h)
+                    break;
+            }
+            for(;r>=0;--r){
+                if(height[r]>=h)
+                    break;
+            }
+            cont = cont>((r-l)*h)? cont:((r-l)*h);
+        }
+        return cont;
+    }
+};
+
+Time:o(n2);
+Space:o(1)
+
+
+Approach2:
+  动态规划，取左右边界分别为i、j，
+    若hi <= hj:
+      那么j是令area(i, j)最大的右边界，因为
+      for any k(i < k < j):
+        area(i, j) == min(hi, hj)*(j-i) == hi*(j-i) > hi*(k-i) >= min(hi,hk)*(k-i) == area(i, k)
+      it means j is the best choice for i, area(i,j)= largest_area_involves_i
+      so, max_area_of_range(i, j) == max(max_area_of_range(i+1, j), largest_area_involves_i)
+      即边界在i、j内的最大区域 = max（以i为边界的最大区域， 边界在i+1、j内的最大区域，而以i为边界的最大区域 = area(i,j)
+    若hi >= hj:
+    情况相反。
+    
+    考虑简单情况，总是hi <= hj:
+      max_area_of_range(i, j) == max(area(i,j), max_area_of_range(i+1, j))
+      max_area_of_range(i+1, j) == max(area(i+1,j), max_area_of_range(i+2, j))
+      ...
+      max_area_of_range(j-2, j) == max(area(j-1,j), max_area_of_range(j-2, j))
+      依次带入：
+      max_area_of_range(i, j) == max(area(i,j), area(i+1,j), ..., area(j-1,j))
+      
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int maxArea = 0;
+        for(int i=0,j=height.size()-1;i<j;){
+            if(height[i]>=height[j]){
+                maxArea = max(maxArea, (j-i)*height[j--]);
+            }
+            else{
+                maxArea = max(maxArea, (j-i)*height[i++]);
+            }
+            
+        }
+        return maxArea;
+    }
+};
+
+极度简化版：
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int maxArea = 0;
+        for(int i=0,j=height.size()-1;i<j;){
+            maxArea = max(maxArea, (j-i)*height[(height[i]>=height[j]?j--:i++)]);
+        }
+        return maxArea;
+    }
+};
