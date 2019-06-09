@@ -1,0 +1,67 @@
+Approach:
+hashset
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        unordered_set<ListNode*> iset;  //注意，value_type是指针，直接ListNode会报错。
+        while(head){
+            if(iset.count(head)) return true;
+            else iset.insert(head);
+            head = head->next;
+        }
+        return false;
+    }
+};
+
+
+Approach2:
+
+//这里主要是要考虑周全有哪些 循环list：
+//不但是 1 2 3 4 1 2 3 4 ...
+//还有 1 2 3 2 3 2 3...
+//*** 起始位置不一定在循环中
+
+//所以，思路：
+//1.使用两个指针 head、p；
+//2.head一次移动一步，p一次移动两步。
+//3.如果链表是循环的，那么在某时刻，head和p会相遇。
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(slow && fast && fast->next){    //while中使用null->next是非法的，要先判断；因为fast总是在slow前面，所以slow可以不用判断了。
+            slow = slow->next;
+            fast = fast->next->next;
+            if(slow == fast) return true;
+        }
+        return false;   //一旦，链表断开，无循环
+    }
+};
+
+
+Approach3：
+要判断是否出现过，不仅可以食用hashset，还可以做标志，这里可以改变val的值作为是否访问过的标志。
+将经历过的val的值改为INT_MAX，一旦遇到就说明循环，直到最后没遇到就说明不循环。
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        while(head){
+            if(head->val == INT_MAX) return true;
+            head->val = INT_MAX;
+            head = head->next;
+        }
+        return false;
+    }
+};
