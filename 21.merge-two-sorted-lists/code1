@@ -15,7 +15,7 @@ public:
         ListNode* p = l3;
         while(l1 && l2){
             if(l2->val < l1->val){
-                p->next = new ListNode(l2->val);
+                p->next = new ListNode(l2->val);   //申请了空间，有额外的空间复杂度。
                 l2 = l2->next;
             }
             else{
@@ -28,3 +28,28 @@ public:
         return l3->next;
     }
 };
+
+
+//code2
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode l3(0);     /这是兴建一个结构，不需要删除空间，因为自动析构函数；也可以 ListNode* head = new ListNode(0);
+        ListNode* p = &l3;
+        while(l1 && l2){
+            if(l2->val < l1->val){
+                p->next = l2;
+                l2 = l2->next;
+            }
+            else{
+                p->next = l1;
+                l1 = l1->next;
+            }
+            p = p->next;
+        }
+        p->next = l1?l1:l2;
+        return l3.next;
+    }
+};
+
