@@ -1,0 +1,78 @@
+Approach1:
+  如果交叉，一定有一个先或同时遇到节点，这样相当于看后遇到那个的节点是否被访问过了，可以用hash表。
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        unordered_set<ListNode*> iset;
+        while(headA){
+            iset.insert(headA);
+            headA = headA->next;
+        }
+        while(headB){
+            if(iset.count(headB)) return headB;
+            else {
+                iset.insert(headB);
+                headB = headB->next;
+            }
+        }
+        return NULL;
+    }
+};
+
+
+Approach2:
+//通过计算两链表长度，得到长度之差diif；
+//让较长的链表的指针先走diff，就能保证它们同时结束。
+
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (!(headA && headB)) return NULL;
+        auto a = headA;
+        auto b = headB;
+        int i = 0, j = 0;
+        while(a) {
+            ++i;
+            a = a->next;
+        }   
+        while(b) {
+            ++j;
+            b = b->next;
+        } 
+        auto longer=i>j? headA:headB;
+        auto shorter=i>j? headB:headA;
+        int diff = i>j? (i-j):(j-i);
+        while(diff-->0) longer = longer->next;
+        while(longer){                                  //这里还能优化，因为同时结束，当longer==NULL时，shorter也为NULL，直接返回longer即可。
+            if(longer == shorter) return longer;
+            longer = longer->next;
+            shorter = shorter->next;
+        }
+        return NULL;
+    }
+};
+
+
+Approach3:
+//不用计算两个链表的长度
+//令a = headA，b = headB，当a遍历链表A、B到达的点和b遍历B、A到达的点是相同点；
+//所以，通过让a走完A后，转移到B的dead，b走完B后，转移到A的head，这样能保证他们最后相遇。这样，如相交，则相交的点 a=b。
+//此外，还有一点需要注意，若没有相交，是否会一直循环下去。
+//不会，因为遍历完A、B后，a=b=nullptr，此时不满足循环条件。同时，也不同特别说明不想交的特例。
+
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (!(headA && headB)) return NULL;
+        auto a = headA;
+        auto b = headB;
+        while (a!=b){
+            a = a==nullptr? headB:a->next;    //只有走完一次后，才会交换，第二次走完，两者同时为nullptr，返回空值。
+            b = b==nullptr? headA:b->next;
+        }
+        return a;
+    }
+};
