@@ -1,0 +1,50 @@
+Approach1:
+  这里需要记录大小顺序，即每个长度minstack下的最小元素；
+  可以用vector vec保存元素；
+  用另一个vector保存在该元素个数下vec中最小元素的位置。
+  
+class MinStack {
+private:
+    vector<int> Min;
+    vector<int> Vec;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+    }
+    
+    void push(int x) {
+        Vec.push_back(x);
+        if(Min.size()<1) Min.push_back(0);
+        else{
+            int pos = Min[Min.size()-1];
+            Min.push_back(x<Vec[pos]?Min.size():pos);
+        }
+    }
+    
+    void pop() {
+        Vec.pop_back();
+        Min.pop_back();
+    }
+    
+    int top() {
+        return Vec[Vec.size()-1];
+    }
+    
+    int getMin() {
+        return Vec[Min[Min.size()-1]];
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
+ 
+ 
+ 
+ improve：
+  Min可以用来只保存最大值而不是下标，因为比较大小实在push时决定的。
