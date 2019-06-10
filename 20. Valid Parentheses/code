@@ -1,0 +1,44 @@
+Approach1:
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> Stack;
+        for(char a:s){
+            if(a=='(' || a=='[' || a=='{') Stack.push(a);
+            else{
+                if(Stack.empty()) return false;
+                char b = Stack.top();
+                Stack.pop();
+                if(a==')' && b=='(')  continue;
+                else if(a==']' && b=='[')  continue;
+                else if(a=='}' && b=='{')  continue;
+                else return false;
+            }
+        }
+        return Stack.empty();
+    }
+};
+
+
+Approach2:
+  但匹配变多时，最好使用hashtable。
+  
+class Solution {
+public:
+    bool isValid(string s) {
+        unordered_map<char, char> Map;
+        Map.insert({')','('});
+        Map.insert({']','['});
+        Map.insert({'}','{'});
+        stack<char> Stack;
+        for(char a:s){
+            if(!Map.count(a)) Stack.push(a);   //有缺点，a不再map中
+            else{
+                if(Stack.empty() || Stack.top()!=Map[a]) return false;
+                Stack.pop();
+            }
+        }
+        return Stack.empty();
+    }
+};
