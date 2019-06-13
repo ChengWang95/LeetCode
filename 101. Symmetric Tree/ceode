@@ -1,0 +1,58 @@
+思路：
+  从左开始先序遍历，从右开始先序遍历，两个遍历相同，不能说明对称；因为可能出现这样的情况：
+      1
+     / \
+    2   2
+     \   \
+     3    3
+  
+Approach1:递归
+镜像，先画出来，将两棵树分别往不同的方向延申，比较值是否相同；
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return isMirror(root, root);
+    }
+    bool isMirror(TreeNode* r1, TreeNode* r2){
+        if(r1==NULL && r2==NULL) return true;
+        if (r1==NULL || r2==NULL) return false;
+        return (r1->val == r2->val) && isMirror(r1->left, r2->right) && isMirror(r1->right, r2->left);
+    }   
+};
+
+Approach2:
+  用队列的方式遍历。进行比较
+  
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        deque<TreeNode*> Que;
+        Que.push_back(root);
+        Que.push_back(root);
+        while(!Que.empty()){
+            TreeNode* r1 = Que.front();
+            Que.pop_front();
+            TreeNode* r2 = Que.front();
+            Que.pop_front();
+            if(r1==NULL && r2==NULL) continue;
+            Que.push_back(r1->left);
+            Que.push_back(r2->right);
+            Que.push_back(r1->right);
+            Que.push_back(r2->left);
+        }
+        return true;
+    }
+};
+
+
+#前面之所以先序遍历不行，是因为Vec没有保存NULL节点，NULL节点也应该一起保存。
