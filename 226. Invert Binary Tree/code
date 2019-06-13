@@ -1,0 +1,80 @@
+Approach1:
+  递归
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root==NULL) return root;
+        TreeNode* left = invertTree(root->left);
+        TreeNode* right = invertTree(root->right);
+        root->left = right;
+        root->right = left;
+        return root;
+    }
+};
+
+  简洁化
+TreeNode* invertTree(TreeNode* root) {
+    if (root) {
+        invertTree(root->left);
+        invertTree(root->right);
+        std::swap(root->left, root->right);
+    }
+    return root;
+}
+
+Approach2：
+  迭代，栈
+  
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        std::stack<TreeNode*> stk;
+        stk.push(root);
+
+        while (!stk.empty()) {
+            TreeNode* p = stk.top();
+            stk.pop();
+            if (p) {
+                stk.push(p->left);
+                stk.push(p->right);
+                std::swap(p->left, p->right);
+            }
+        }
+        return root;
+    }
+};
+
+Approach3：
+  迭代，队列
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root==NULL) return root;
+        deque<TreeNode*> Que;
+        TreeNode* pos = root;
+        Que.push_front(root);
+        while(!Que.empty()){
+            root = Que.back();
+            Que.pop_back();
+            TreeNode* left = root->left;
+            root->left = root->right;
+            root->right = left;
+            if(root->left != NULL) Que.push_front(root->left);
+            if(root->right != NULL) Que.push_front(root->right);
+        }
+        return pos;
+    }
+};
+
+
+###其实这根本不需要先序遍历之类的，每个节点入栈一次，并交换左右孩子。
