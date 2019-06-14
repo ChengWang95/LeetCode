@@ -1,0 +1,49 @@
+Approach1:
+BST从左边中序是从小到大访问，从右边中序是从大到小访问。
+这里需要在该数上加上比该数大的数之和，即可反过来，从大到小访问，累计访问过的数，和值即为要加的数。
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        int Sum = 0;
+        stack<TreeNode*> Stack;
+        TreeNode* pos = root;
+        while(true){
+            while(root){
+                Stack.push(root);
+                root = root->right;
+            }
+            if(Stack.empty()) break;
+            root = Stack.top();
+            Stack.pop();
+            Sum += root->val;
+            root->val = Sum;
+            root = root->left;
+        }
+        return pos;
+    }
+};
+
+Approach2:递归
+class Solution {
+private:
+    int sum = 0;
+public:
+    
+    TreeNode* convertBST(TreeNode* root) {
+        if(root==NULL) return NULL;
+        convertBST(root->right);
+        sum += root->val;
+        root->val = sum;
+        convertBST(root->left);
+        return root;
+    }
+};
