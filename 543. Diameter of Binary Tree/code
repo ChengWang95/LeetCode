@@ -1,0 +1,45 @@
+Approach1:
+思路：因为经过该节点的最大长度为最子树高度加右子树高度，所以可以在递归树高时不断比较长度，里面用引用表全局变量。
+在递归中，因为 节点高度=max（左子树高度，右子树高度），而该节点长度=左子树高度+右子树高度。
+这样，递归字数高度的同时可以计算长度。
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        int lenth = 0;
+        get_h(root, lenth);
+        return lenth;
+    }
+    int get_h(TreeNode* root, int& lenth){
+        if (root==NULL) return 0;
+        int left_h = get_h(root->left, lenth);
+        int right_h = get_h(root->right, lenth);
+        if(left_h+right_h > lenth) lenth = left_h + right_h;
+        return left_h>right_h?(left_h+1):(right_h+1);
+    }
+};
+
+#另一种语法表示，因为在类中，可以直接制定一个类全局变量。
+class Solution {
+public:
+    int lenth = 0;
+    int diameterOfBinaryTree(TreeNode* root) {
+        get_h(root);
+        return lenth;
+    }
+    int get_h(TreeNode* root){
+        if (root==NULL) return 0;
+        int left_h = get_h(root->left);
+        int right_h = get_h(root->right);
+        if(left_h+right_h > lenth) lenth = left_h + right_h;
+        return left_h>right_h?(left_h+1):(right_h+1);
+    }
+};
